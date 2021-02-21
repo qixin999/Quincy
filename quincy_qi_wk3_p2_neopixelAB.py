@@ -38,9 +38,10 @@ while True:
 
             if not bPre:
                 color = BLUE
+        pixels.fill(color)
 
     else:
+        color = WHITE
         pixels.fill(CLEAR)
 
-    pixels.fill(color)
     time.sleep(0.01)
