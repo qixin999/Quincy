@@ -86,13 +86,14 @@ while True:
         else:
             pixels[5] = ((100, 0, 0))
 
-        # detect switch position and
+        # manual mode
         if switch.value:
             pixels[3] = modeColor
             pixels[6] = CLEAR
             if lightMode == 1:
                 pixels[4] = (0, 255, 0)
                 reading1 = analog_in1.value
+                # Light up the specified number of lights
                 if pixels[5] == CLEAR:
                     if reading1 < 10000:
                         pixels[2] = (r, 0, b)
@@ -118,6 +119,7 @@ while True:
                 else:
                     pixels[2] = pixels[1] = pixels[0] = pixels[9] = \
                             pixels[8] = pixels[7] = (0, 0, 0)
+            # manual mode sleep
             else:
                 pixels[4] = (0, breath, 0)
                 pixels[2] = pixels[1] = pixels[0] = pixels[9] = \
@@ -129,16 +131,21 @@ while True:
                 if breath < 1:
                     i = -i
                     time.sleep(0.01)
+        # auto mode
         else:
             pixels[6] = modeColor
             pixels[3] = CLEAR
             pixels[4] = (0, 255, 0)
+            # print current humidity
             print(reading)
+            # when water is enough
             if pixels[5] == CLEAR:
+                # humidity greater than 40 stop working
                 if reading > 40:
                     pixels[2] = pixels[1] = pixels[0] = pixels[9] = \
                         pixels[8] = pixels[7] = (0, 0, 0)
                 else:
+                    # start working with light animation
                     newList = [0, 0, 0, 0, 0, 0]
                     for j in range(6):
                         newList[j] = (0, 0, k - j * 10)
@@ -147,6 +154,8 @@ while True:
                         k = 0
                     for x in range(6):
                         pixels[(12 - x) % 10] = newList[x]
+
+            # water shortage and stop working
             else:
                 pixels[2] = pixels[1] = pixels[0] = pixels[9] = \
                                 pixels[8] = pixels[7] = (0, 0, 0)
