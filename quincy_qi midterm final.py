@@ -1,3 +1,5 @@
+# PHCR quincy qi midterm air humidifier indicator lights
+# import
 import board
 import neopixel
 import time
@@ -43,6 +45,7 @@ CLEAR = (0, 0, 0)
 m = time.monotonic()
 k = 0
 while True:
+# read humidity and define color
     if time.monotonic() - m >= 0.3:
         m = time.monotonic()
         reading = am.relative_humidity
@@ -53,13 +56,17 @@ while True:
         color = (r, 0, b)
         print(r, 0, b)
         time.sleep(0.01)
+
+    # detect button push time
     if button.value != buttonPre:
         buttonPre = button.value
         if not button.value:
             buttonPressTime = time.monotonic()
         else:
+            # long press toggle the on or off
             if time.monotonic() >= buttonPressTime + 1:
                 onoffMode += 1
+            # short press toggle work or sleep
             else:
                 lightMode += 1
 
@@ -67,13 +74,19 @@ while True:
         onoffMode = 0
     if lightMode > 1:
         lightMode = 0
+
+    # read analog value to detect water
     reading2 = analog_in3.value
+
     if onoffMode == 1:
+        # with water
         if reading2 > 30000:
             pixels[5] = CLEAR
+        # without water
         else:
             pixels[5] = ((100, 0, 0))
 
+        # detect switch position and
         if switch.value:
             pixels[3] = modeColor
             pixels[6] = CLEAR
